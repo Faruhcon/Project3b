@@ -1,0 +1,53 @@
+Requirements Met:
+	Begin Map Displayed [4pts]
+	Final Values F(x), H(x), G(x) [6pts]
+	Final Path Drawn [4pts]
+	Final Length/# of Steps Displayed [4pts]*
+	Efficiency: Animates Smoothly [4pts]
+	Animation Speed Configurability [4pts]**
+	Supports environment grid size of 204 tiles (17x12***) [4pts]
+	Support different configured environments [4pts]
+	Goal (X,Y) configurability [2pts]
+	Start (X,Y) configurability [2pts]
+	Stepped [4pts]
+	Report with Screenshots [6pts]
+	Grading.txt [4pts]
+	README [2pts]
+	Demo [10pts] (in class)
+
+For my embellishments, I decided to...
+	compare three different heuristics [15pts] (Diagonal, Euclidean, Euclidean Squared),
+	compare Dijkstra's [5pts], 
+	compare Best First [5pts]
+	
+	The combinations of algorithms and heuristics are:
+		1) A* + Manhattan (H only uses up/down/left/right paths, openList sorted by F score)
+		2) A* + Diagonal  (H uses all directions and adjusts length for diagonals, openList sorted by F score)
+		3) A* + Euclidean (H uses line distance (sqrt(dx*dx+dy*dy)), openList sorted by F score)
+		4) A* + Euclidean Squared (Euclidean without sqrt, openList sorted by F score)
+		5) Dijkstra + 0 (H=0, openList sorted by F score)
+		6) Best First + Manhattan (H only uses up/down/left/right paths, openList sorted by H score)
+
+		
+*Final Length/# of Steps Displayed [4pts]
+  Final Length/# of steps are shown in the Start Node once path has been found.
+			N = (#C,#P)
+		where N = "number of nodes",
+			 #C = number of nodes processed by algorithm in order to find path.
+			 #P = number of nodes in path from start to goal (does NOT include start in total)
+			 
+**Animation Speed configurability [4pts]
+   Cannot step through any faster in terms of step by step 
+		(will always show the results of processing the next/previous node for every arrow press)
+    However, the final results can by displayed without stepping through each step by pressing enter
+		And can stop stepping through at any time by pressing enter.
+		
+***Supports environment grid size of at least 200 tiles [4pts]
+   >>Updated after demo to support 17x12 grid size (total tiles = 204)<<
+   >>Cannot be changed at run time<<
+	Grid size is 150 tiles (15x10) but it could be updated to support a larger size.
+	To do this, I would need to change the size of the background layer to support more tiles
+	and update a few constants to account for it (to make sure all tiles got covered).
+	
+	
+	

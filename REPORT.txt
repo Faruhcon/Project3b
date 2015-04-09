@@ -1,0 +1,105 @@
+To Run:
+	I have included the source files in my nike submission (in order to view the source code).
+	I also uploaded a baked version to a public repo
+		repo link: https://github.com/Faruhcon/Project3b
+		demo link: 
+	To run the uploaded version, just follow the demo link.
+	To run the uploaded version from the repo, clone the repo and run /index.html 
+	To run the source file version, you will need to copy the contents within the impact directory
+		and run impact/index.html
+		**To run locally, I used xampp.
+	See below for controls. 
+
+I used ImpactJS to implement a 2D grid-based implementation of the A* algorithm. 
+	To do this, I made a background image with all of the possible tile combinations I needed (arrows, start, goal, empty, outlines), which allows me to classify a tile
+	based on the value stored in the background layer's data array (each tile on the background image has a unique value).  Using this data array, I constructed another 
+	2D array to store "node" data (unique id, background id, parent node, column/row indices, G score, H score, F score, traversal weight (scale), and whether or not it is closed).
+	This new array is stored in an invisible "buildpath" entity sitting in the level.  This entity contains the functions and variables needed to execute the A* algorithm.
+	In order to find the shortest path, I used a priorityqueue class that I made specifically for processing node data using JS arrays, which uses an array (queue) to store nodes
+	sorted according to some given sortBy value (such as F Score or H Score).  By using a priorityqueue for my openList, I could guarantee that I was processing the node with the lowest
+	sortBy value first and therefore that every node in my closedList had a sortBy value that was less than or equal to all nodes in my openList.  Since A* begins processing nodes from the
+	Start node, this means that the shortest path to every node in the closedList from the start node could be found by following node parent values.  Therefore, once the goal node was processed, 
+	the shortest path from Start to Goal had been found and could be traced using node parents.
+	
+	In order to edit the map, I made a mouse singleton class that is instantiated in my main file.
+		This singleton converts the "pixel" location from the mouse data to "tile" locations (so if mouse is clicked anywhere within a tile, it counts as over the tile)
+		Therefore, the mouse data determined which tile the mouse cursor was hovering over when clicked (right or left)
+		Note: Map editing controls/logic are found in main file.
+			>>Map cannot be edited if shortest path results are being displayed.  To clear the map, simply press enter.<<
+			>>To generate new maps they must be edited using the interface.  There is no dialogue or file upload option.<<
+	
+For my embellishments, I decided to compare three different heuristics (Diagonal, Euclidean, Euclidean Squared), compare Dijkstra's, and compare Best First.
+	The combinations of algorithms and heuristics are:
+		1) A* + Manhattan (H only uses up/down/left/right paths, openList sorted by F score)
+		2) A* + Diagonal  (H uses all directions and adjusts length for diagonals, openList sorted by F score)
+		3) A* + Euclidean (H uses line distance (sqrt(dx*dx+dy*dy)), openList sorted by F score)
+		4) A* + Euclidean Squared (Euclidean without sqrt, openList sorted by F score)
+		5) Dijkstra + 0 (H=0, openList sorted by F score)
+		6) Best First + Manhattan (H only uses up/down/left/right paths, openList sorted by H score)
+	In order to implement the different heuristics, I added a function to switch between different equations for calculating a node's H score.
+	Since Dijkstra's is simply A* where H=0, I implemented it the same way as I did the heuristics using the equation H = 0.
+	In order to implement Best First, I simply changed the sortBy value for my priorityqueue from F score (distance from start+distance to goal) to H score (distance from goal).
+		I chose to do this because Best First IS A* using a different value (H score rather than F score) to determine which node to process next.
+	
+Grid size is not configurable from the game itself.  However to automate this, it would just be a matter of updating the background grid for the level
+	(increase array size and fill it in) and constants (WIDTH_SCALE and HEIGHT_SCALE). And, of course, adding a button or key to do so.
+	
+I decided to make the menu pop up at the beginning, it can be dismissed using the space bar.
+	Note: You cannot change modes while a path is displayed.  The grid must be cleared first (enter key)
+	and then hit tab to switch modes.  The current mode is displayed in the start tile.
+	You can step through the algorithm using the arrow keys (rather than enter to display the final result).
+		Enter can be pressed at any point to clear grid and then pressed again to display final result.
+		Each "step" simply the results of processing all the neighbors of a single node (the node with the lowest sortBy value) 
+			and adding those neighbors to the openList and the current node to the closed list.
+		
+What's with the colors?
+	Green tile = Start tile
+	Red tile = Goal tile
+	Blue tiles = wall tiles (obstacles)
+	"Black" tiles = empty tiles (can be traversed)
+	Green outline = this node is in the openList and is queued to be processed if goal is not found beforehand
+	Blue outline = this node is in the closedList and has already been processed
+	White outline with red circle = this node is part of the shortest path
+	Arrows = point to the parent node
+		So, shortest path would start at goal and follow the arrows to start.
+	
+...and numbers?
+	Top Left = F Score (G+H): Sum of distance from start (G) and estimated distance to goal (H)
+	Bottom Left = H Score: Estimated distance to goal
+	Bottom Right = G Score: Distance from start 
+	>>H values will update as you move goal around!<<
+	
+...and text on start node?
+	Lists the current algorithm and heuristic being used.
+	If a path has been found, it also lists the distance traveled from start to goal (Dist = # [goal's F score]),
+		and how many nodes were processed by the algorithm (#C) and must be traversed to get from start to goal (#P) (N=(#C, #P))
+		NOTE: that the number shown for P is the number of nodes FROM (but not including) start to goal. 
+	
+Example Maps: 
+	I have not included any sample maps.  The default map has start, goal, and 4 walls.
+	The map can be edited as long as there is no pathfinding data (except H score) being displayed 
+		(hitting enter after starting algorithm will let you edit map again).
+	Goal/Start can be moved around by clicking and dragging.
+	Walls can be removed by left clicking on them
+				 added by press/holding right click over an empty tile
+	>>Goal/Start can only be moved to an empty tile
+	>>Walls can only be added to empty tiles
+		(can try to do this but it won't let you, I promise.  The tile must be empty to move something new there.)
+		NOTE: walls can be continuously drawn by holding down right click even if you go over goal/start tiles,
+				it just won't add a wall to the goal/start tile along the way!
+				
+Screenshots can be found in the screenshots folder.
+	Included final results for each algorithm/heuristic combination above
+			 example of an edited map
+			 example of evaluating a couple steps of A*/Manhattan 
+Controls:
+	Space: Press to toggle menu on/off
+	Enter: Press to switch between Map Editing & Path Finding Results
+	Left/Right Arrows: Press to use current algorithm/heuristic to process one node at a time
+	Tab: Press to change to a different algorithm/heuristic
+
+	>>>Map Editing<<<
+	Move Start: Click & Drag
+	Move Goal: Click & Drag OR Left Click an Empty Node
+	Add Walls: Right Click Press or Drag over Empty Nodes
+	Remove Wall: Left Click over Wall
