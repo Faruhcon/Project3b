@@ -93,6 +93,14 @@ Screenshots can be found in the screenshots folder.
 			 example of an edited map
 			 example of evaluating a couple steps of A*/Manhattan 
 			 menu
+			 
+Final note:
+	I included my failed code for D*.  I have made changed to the other code since then so it is beyond broken 
+	(even more than it was).  My best guess as to why it did not work is how I managed my priorityqueue.  As I was testing it,
+	no new nodes besides the start node were added to queue.  The culprit seemed to be my peek function (which I did not use
+	for A*).  Beyond that, I was unable to test the logic (and I did not add in the "error checking" to update the scores along
+	path if an obstacle was encountered.  Function is there but it is not called anywhere.)
+	
 Controls:
 	Space: Press to toggle menu on/off
 	Enter: Press to switch between Map Editing & Path Finding Results
